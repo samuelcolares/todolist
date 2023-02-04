@@ -1,0 +1,263 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700);
+
+:root {
+    --background-color: black;
+    --default-font-size: 16px;
+    --font-family-default: "Roboto Condensed", Arial, sans-serif;
+
+    --header-text-color: #fff;
+    --header-background-color: linear-gradient(to left, #ed213a, #93291e);
+
+    --task-background-color: #262e4c;
+    --task-separation-color: #1c2340;
+    --task-text-color: #b1b2c9;
+    --task-hover-color: #323b5c;
+
+    --check-background-color: #404a6e;
+    --check-background-color-effect: #171d37;
+
+    --input-background-color: rgb(23, 29, 55);
+    --input-text-color: #fff;
+    --placeholder-color: rgb(105, 117, 117);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 20px;
+    place-items: center;
+    background-color: var(--background-color);
+    background-image: url(../img/bkdktp.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 30%;
+    font-family: var(--font-family-default);
+    font-size: var(--default-font-size);
+    overflow-x: hidden;
+}
+
+.toDoList {
+    width: 100%;
+    max-width: 600px;
+    padding: 4rem;
+}
+
+/* ----------------------------------------------
+---------------------Header---------------------
+*/
+.toDoList header {
+    color: var(--header-text-color);
+    background: var(--header-background-color);
+    padding: 1rem;
+    border-radius: 5px 5px 0 0;
+    font-size: 1.3rem;
+}
+
+/* ----------------------------------------------
+---------------------Lista---------------------
+*/
+.wrapper-list ul.list li {
+    position: relative;
+    background-color: var(--task-background-color);
+    border-bottom: 1px solid var(--task-separation-color);
+    color: var(--task-text-color);
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    transition: all 300ms ease;
+}
+.wrapper-list ul.list li:hover {
+    background-color: var(--task-hover-color);
+}
+
+/* ----------------------------------------------
+---------------------Botão Remover---------------------
+*/
+.wrapper-list ul.list li:hover button.remove {
+    opacity: 1;
+}
+
+.wrapper-list ul.list button.remove {
+    position: absolute;
+    background-color: var(--header-background-color);
+    background-image: url(../img/delete.png);
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    border: none;
+    outline: none;
+    border-radius: 100%;
+    right: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 300ms ease;
+}
+
+.wrapper-list ul.list button.remove:active{
+    transition: 400ms;
+    transform: scale(.6);
+}
+
+/* ----------------------------------------------
+---------------------Botão de marcar---------------------
+*/
+.wrapper-list ul.list .check {
+    position: relative;
+    background-color: var(--check-background-color);
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: all 500ms;
+}
+
+.wrapper-list ul.list .check:hover {
+    background-color: var(--check-background-color-effect);
+}
+
+.wrapper-list ul.list li.done .check{
+    background-image: url(../img/check1.png);
+    background-size: 25px;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: check 2s ease forwards;
+}
+@keyframes check {
+    0% {
+        opacity: 0;;
+    }
+    100% {
+       opacity: 1;
+    }
+}
+
+/* ----------------------------------------------
+---------------------Label (Nome da tarefa)---------------------
+*/
+.wrapper-list ul.list li .task {
+    color: var(--input-text-color);
+}
+.wrapper-list ul.list li.done .task {
+    text-decoration: line-through;
+}
+
+/* ----------------------------------------------
+---------------------Input---------------------
+*/
+#inputTask {
+    background: var(--input-background-color);
+    border: none;
+    width: 100%;
+    color: var(--input-text-color);
+    outline: none;
+    padding: 20px;
+    border-radius: 0 0 5px 5px;
+    font-size: 1.2rem;
+    font-family: var(--font-family-default);
+}
+
+#inputTask::placeholder {
+    color: var(--placeholder-color);
+}
+
+/* ----------------------------------------------
+---------------------Animação de Excluir Tarefa---------------------
+*/
+@keyframes closing {
+    0% {
+    }
+    100% {
+        transform: rotateX(-0.25turn) translateX(1000px);
+    }
+}
+.wrapper-list ul.list li.removed {
+    animation: closing 1s ease forwards;
+}
+.wrapper-list ul.list li.deleted {
+    display: none;
+}
+
+/* ----------------------------------------------
+---------------------Mensagens Pop-up---------------------
+*/
+.toast {
+    transform: translateX(-50%);
+    color: white;
+    position: absolute;
+    top: -15%;
+    left: 50%;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 1s;
+}
+
+.toast.visible {
+    top: 5%;
+    border: 2px solid red;
+    background: firebrick;
+    box-shadow: 0px 0px 10px red;
+}
+
+.toast.length {
+    top: 5%;
+    border: 2px solid orange;
+    background-color: rgba(255, 165, 0, 0.6);
+    box-shadow: 0px 0px 10px orange;
+}
+
+.footer {
+    color: wheat;
+    font-size: 0.7rem;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        background-image: url(../img/bkmbl.png);
+        background-size: cover;
+        padding-top: 8rem;
+        grid-template-rows: 1fr minmax(400px, 10px);
+        height: 80vh;
+    }
+    .toDoList {
+        max-width: 80vw;
+        box-shadow: -2px 3px 10px rgb(252, 234, 50);
+        border-radius: 10px;
+        padding: 0;
+        background-color: var(--task-hover-color);
+    }
+
+    .toDoList header {
+        text-align: center;
+    }
+
+    .toast {
+        width: 90vw;
+        font-size: 20px;
+    }
+
+    .toast.visible {
+        top: 2%;
+    }
+
+    .toast.length {
+        top: 2%;
+    }
+
+    span{
+        display: none;
+    }
+}
+
+
