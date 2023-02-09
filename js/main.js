@@ -1,10 +1,12 @@
 
-//Const main um objeto para formalizar e deixar muito mais organizado as estruturas de código JavaScript
 const main = {
+    tasks: [],
 
     init: function () {
         this.cacheSelectors()
         this.bindEvents()
+        this.getStoraged()
+        this.buildTasks()
     },
 
 
@@ -14,30 +16,86 @@ const main = {
         this.$removeButtons = document.querySelectorAll('.remove')
         this.$inputTask = document.querySelector('#inputTask')
         this.$toast = document.querySelector('.toast')
+        this.$listItem = document.querySelector('.list-item')
     },
 
 
     bindEvents: function () {
         const self = this
         this.$checkButtons.forEach(function (checkmark) {
-            checkmark.onclick = self.Events.checkButton_click
+            checkmark.onclick = self.Events.checkButton_click.bind(self)
         })
 
-        this.$inputTask.onkeypress = self.Events.inputTask_keypress.bind(this)
+        this.$inputTask.onkeypress = self.Events.inputTask_keypress.bind(self)
 
         this.$removeButtons.forEach(function (remove) {
-            remove.onclick = self.Events.removeButton_click
+            remove.onclick = self.Events.removeButton_click.bind(self)
         })
+    },
+
+
+    getStoraged: function () {
+        const tasks = localStorage.getItem('tasks');
+        this.tasks = tasks ? JSON.parse(tasks) : [];
+    },
+
+    getTaskHTML: function (task, check) {
+        return `
+        <li class="${check}">
+            <div class="check"></div>
+            <label for="" class="task">${task}</label>
+            <button class="remove" data-task="${task}"></button>
+        </li>`
+    },
+
+    buildTasks: function () {
+        let html = '';
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        console.log(tasks);
+
+        if (Array.isArray(this.tasks)) {
+            this.tasks.forEach(item => {
+                if (item.done) {
+                    item.className = "done";
+                } else {
+                    item.className = "";
+                }
+
+                html += this.getTaskHTML(item.task, item.className);
+            });
+        }
+
+        this.$list.innerHTML = html;
+
+        this.cacheSelectors();
+        this.bindEvents();
     },
 
     Events: {
         checkButton_click: function (e) {
-            const li = e.target.parentElement
-            const done = li.classList.contains('done')
+            const li = e.target.parentElement;
+            const task = li.querySelector(".task").textContent;
+            const done = li.classList.contains("done");
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
             if (!done) {
-                return li.classList.add('done')
+                li.classList.add("done");
+                tasks = tasks.map(item => {
+                    if (item.task === task) {
+                        item.done = true;
+                    }
+                    return item;
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                return;
             }
-            li.classList.remove('done')
+            li.classList.remove("done");
+            tasks = tasks.map(item => {
+                if (item.task === task) {
+                    item.done = false;
+                }
+                return item;
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
         },
         inputTask_keypress: function (e) {
             const key = e.key
@@ -56,32 +114,44 @@ const main = {
                     toast.classList.remove('length')
                 }, 3000)
             } else if (key === 'Enter') {
-                this.$list.innerHTML += `
-                <li>
-                    <div class="check"></div>
-                    <label for="" class="task">${value}</label>
-                    <button class="remove"></button>
-                </li>`
-
+                this.$list.innerHTML += this.getTaskHTML(value)
                 e.target.value = ''
                 this.cacheSelectors()
                 this.bindEvents()
+
+                const task = {
+                    task: value,
+                    done: false
+                };
+                let savedTasks = localStorage.getItem('tasks')
+                let savedTasksOBJ = savedTasks ? JSON.parse(savedTasks) : []
+
+                if (!Array.isArray(savedTasksOBJ)) {
+                    savedTasksOBJ = []
+                }
+                savedTasksOBJ.push(task)
+                localStorage.setItem('tasks', JSON.stringify(savedTasksOBJ))
             }
         },
-        removeButton_click: function (e){
-            const li = e.target.parentElement
-            const removed = li.classList.contains('removed')
+        removeButton_click: function (e) {
+            const li = e.target.parentElement;
+            const task = li.querySelector(".task").textContent;
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks = tasks.filter(item => item.task !== task);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            
 
-            if(!removed){
-                li.classList.add('removed')
-                setTimeout(function(){
-                    li.classList.add('deleted')
-                }, 600)
-            }
+            li.classList.add('removed')
+            setTimeout(function () {
+                li.classList.add('deleted')
+            }, 600)
+            setTimeout(()=>{
+                li.remove();
+            }, 601)
         }
-
     }
 
 }
+
 // fazer as funções rodarem
 main.init()

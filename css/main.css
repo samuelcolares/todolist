@@ -33,13 +33,14 @@ body {
     min-height: 100vh;
     display: grid;
     grid-template-rows: 1fr 20px;
+    grid-template-columns: 4fr 6fr;
     place-items: center;
-    background-color: var(--background-color);
-    background-image: url(../img/bkdktp.png);
-    background-size: contain;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-image: url(../img/spidermangrocerystore.png);
+    background-size: cover;
     background-repeat: no-repeat;
-    background-position: bottom right;
-    background-size: 30%;
+    background-position: center center;
+    background-blend-mode: overlay;
     font-family: var(--font-family-default);
     font-size: var(--default-font-size);
     overflow-x: hidden;
@@ -48,7 +49,8 @@ body {
 .toDoList {
     width: 100%;
     max-width: 600px;
-    padding: 4rem;
+    grid-column-start: 2;
+    box-shadow: 0px 0px 20px black;
 }
 
 /* ----------------------------------------------
@@ -77,6 +79,15 @@ body {
 }
 .wrapper-list ul.list li:hover {
     background-color: var(--task-hover-color);
+    transform: scale(1.1);
+    border-radius: 10px;
+    z-index: 2;
+    border: 1px solid var(--task-separation-color);
+}
+
+.wrapper-list ul.list:hover > :not(:hover) {
+    filter: blur(0.8px);
+    opacity: 0.8;
 }
 
 /* ----------------------------------------------
@@ -102,9 +113,9 @@ body {
     transition: all 300ms ease;
 }
 
-.wrapper-list ul.list button.remove:active{
+.wrapper-list ul.list button.remove:active {
     transition: 400ms;
-    transform: scale(.6);
+    transform: scale(0.6);
 }
 
 /* ----------------------------------------------
@@ -125,7 +136,7 @@ body {
     background-color: var(--check-background-color-effect);
 }
 
-.wrapper-list ul.list li.done .check{
+.wrapper-list ul.list li.done .check {
     background-image: url(../img/check1.png);
     background-size: 25px;
     background-position: center;
@@ -135,10 +146,10 @@ body {
 }
 @keyframes check {
     0% {
-        opacity: 0;;
+        opacity: 0;
     }
     100% {
-       opacity: 1;
+        opacity: 1;
     }
 }
 
@@ -217,31 +228,66 @@ body {
     box-shadow: 0px 0px 10px orange;
 }
 
+/* ----------------------------------------------
+---------------------Footer - Mensagem Adicional---------------------
+*/
+
 .footer {
     color: wheat;
     font-size: 0.7rem;
+    grid-row-start: 2;
+    grid-column: span 2;
 }
+
+.footer a {
+    text-decoration: none;
+    color: wheat;
+    transition: 400ms;
+}
+
+.footer a:hover {
+    color: firebrick;
+}
+
+/* ----------------------------------------------
+--------------------- Versão Mobile---------------------
+*/
 
 @media screen and (max-width: 768px) {
     body {
-        background-image: url(../img/bkmbl.png);
+        display: flex;
+        justify-content: center;
+        background-color: rgba(31, 31, 31, 0.45);
+        background-image: url(../img/batman.png);
         background-size: cover;
+        background-position: bottom center;
+        background-blend-mode: overlay;
         padding-top: 8rem;
-        grid-template-rows: 1fr minmax(400px, 10px);
+        
         height: 80vh;
     }
     .toDoList {
+        margin-top: 15px;
+        align-self: self-start;
         max-width: 80vw;
-        box-shadow: -2px 3px 10px rgb(252, 234, 50);
-        border-radius: 10px;
         padding: 0;
+        border-radius: 0px;
         background-color: var(--task-hover-color);
+        position: relative;
+    }
+
+    .toDoList::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 0;
+        animation: skss 20s ease infinite alternate;
+        z-index: -1;
     }
 
     .toDoList header {
         text-align: center;
+        background: rgb(131, 87, 42);
     }
-
     .toast {
         width: 90vw;
         font-size: 20px;
@@ -255,9 +301,23 @@ body {
         top: 2%;
     }
 
-    span{
+    span {
         display: none;
     }
 }
 
 
+@media only screen and (min-width: 769px) and (max-width: 1366px) {
+    body {
+        grid-template-rows: 1fr 20px;
+        grid-template-columns: 1fr;
+        background-position: initial;
+    }
+    .toDoList {
+        grid-column-start: 1;
+    }
+    .footer {
+        grid-row-start: 2;
+        grid-column: span 1;
+    }
+}
