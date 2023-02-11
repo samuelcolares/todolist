@@ -208,15 +208,15 @@ const main = {
             // 11.4 Verificação para não receber tarefas sem nome, ou menor que quatro letras
             if (!value && key === 'Enter') {
                 toast.innerText = 'Por favor, digite um nome para sua tarefa!'
-                toast.classList.add('visible')
+                toast.classList.add('error')
                 setTimeout(function () {
-                    toast.classList.remove('visible')
+                    toast.classList.remove('error')
                 }, 3000)
             } else if (value.length < 4 && key === 'Enter') {
                 toast.innerText = 'Por favor, digite um nome para sua tarefa que seja maior que 3 letras!'
-                toast.classList.add('length')
+                toast.classList.add('warning')
                 setTimeout(function () {
-                    toast.classList.remove('length')
+                    toast.classList.remove('warning')
                 }, 3000)
                 // 11.5 caso as verificações acima não sejam acionadas, adicionar a tarefa ao HTML usando a função reutilizavel do ITEM 7
             } else if (key === 'Enter') {
