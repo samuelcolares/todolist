@@ -43,3 +43,4 @@ Este projeto foi um pouco desafiador para mim a principio, principalmente quando
     
     
 ## Todos os itens númerados estão presentes no código fonte de javaScript
+### Resumo no notion explicando como fiz: https://samuelcolares.notion.site/To-do-list-bbee42dafbc04dd58ec54fb31dad46f5
