@@ -71,15 +71,13 @@ const main = {
 
     // 5. Função para invocar outras funções que apenas acontecem com interação do usuário
     bindEvents: function () {
-        // 5.1 Aplicando uma variável para armazenar o this que se refere ao objeto main para posteriormente aplicar nas funções o uso do THIS que se refira ao objeto main
-        // const self = this
 
-        //5.2 Sempre que um elemento do HTML seja mais de uma unidade o uso do forEach é necessário
+        //5.1 Sempre que um elemento do HTML seja mais de uma unidade o uso do forEach é necessário
         this.$checkButtons.forEach(checkmark => {
             checkmark.onclick = this.Events.checkButton_click
         })
 
-        // 5.3 Nesse caso não é necessário o uso de forEeach por existir apenas um input de envio de dados
+        // 5.2 Nesse caso não é necessário o uso de forEeach por existir apenas um input de envio de dados
         this.$inputTask.onkeypress = this.Events.inputTask_keypress.bind(this)
 
         this.$removeButtons.forEach((remove) => {
@@ -90,27 +88,20 @@ const main = {
     // 6. Função para armazenar os dados enviados para a TO DO List na array mostrada no ITEM 2
     getStoraged: function () {
 
-        // 6.1 variável para pegar e armazenar os dados (em string) que estão no armazenamento local (localStorage)
-        const tasks = localStorage.getItem('tasks');
-        // 6.2 verificação TERNARIO para subistituir IF e enxugar o código, se tiver alguma tarefa salvan ele transforma em objeto para armazenar na array tasks (ITEM 2), caso contrário ele cria uma array vazia (evita problema com o codigo)
-        this.tasks = tasks ? JSON.parse(tasks) : [];
-         /*
-            if(tasks){
-                this.tasks = JSON.parse(tasks)
-            } else{
-                this.tasks = []
-            }
-        */
+        // 6.1 Variável para pegar e armazenar os dados (em string) que estão no armazenamento local (localStorage)
+        const tasksLocalStorage = localStorage.getItem('tasks');
 
+        // 6.2 Aplicando um JSON.parse para transformar em objetos e atribuindo para a Array 'tasks'
+        this.tasks = JSON.parse(tasksLocalStorage)
     },
 
     // 7. Função para reaproveitar código com dois parâmetros, um para o texto de output e outro para classe
-    getTaskHTML: function (task, check) {
+    getTaskHTML: function (taskContent, check) {
         return `
         <li class="${check}">
             <div class="check"></div>
-            <label for="" class="task">${task}</label>
-            <button class="remove" data-task="${task}"></button>
+            <label for="" class="task">${taskContent}</label>
+            <button class="remove" data-task="${taskContent}"></button>
         </li>`
     },
 
@@ -120,33 +111,31 @@ const main = {
         // 8.1 Definindo a variável que vai receber as tarefas, por isso uma string vazia
         let html = '';
 
-        // 8.2 Definindo a variavel que vai pegar a string de tarefas salvas no local storage e transformar em objeto de novo OU caso seja vazio pega só uma array vazia (Para evitar problemas com o código)
-        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        
-        // 8.3 Verificação para saber se possui algo dentro da array, caso possua a verificação continua, caso contrário já passa para o próximo item
-        if (Array.isArray(this.tasks)) {
-            // 8.4 forEach para percorrer a array de objetos, mesmo que só possua um item.
-            this.tasks.forEach(item => {
-                // 8.5 outra verificação dessa vez para manter a tarefa com a classe do css ativa caso o usuário reinicie a página
-                if (item.done) {
-                    item.className = "done";
-                } else {
-                    item.className = "";
-                }
-                // 8.6 atribuição de incremento das tarefas à variável defininda no ITEM 8.1
-                html += this.getTaskHTML(item.task, item.className);
-            });
+        // 8.2 Verificação para saber se possui algo dentro da array, caso não, a função é encerrada, nesse caso é optativo, caso nao inclua esse 'if' só faz diferença quando o usuário entra pela primeira vez no site um erro é emitido no console, mas nenhuma funcionalidade é afetada.
+        if (!this.tasks) {
+            return
         }
+        // 8.3 forEach para percorrer a array de objetos, mesmo que só possua um item.
+        this.tasks.forEach(item => {
+            // 8.4 Outra verificação dessa vez para manter a tarefa com a classe do css ativa caso o usuário reinicie a página
+            if (item.done) {
+                item.className = "checked";
+            } else {
+                item.className = "";
+            }
+            // 8.5 Atribuição de incremento das tarefas à variável defininda no ITEM 8.1
+            html += this.getTaskHTML(item.task, item.className);
+        });
 
-        // 8.7 output para o usuário
+        // 8.6  Output para o usuário, ou seja, montar as tarefas
         this.$list.innerHTML = html;
 
-        // 8.8 Chamando as funções de novo para manter a funcionalidade dos eventos aplicados no ITEM 5
+        // 8.7 Sempre que há mudança com innerHTML é necessário chamar as funções de novo para manter a funcionalidade dos eventos aplicados no 'bindEvents'
         this.cacheSelectors();
         this.bindEvents();
     },
 
-    // 9. Objeto para armazenar as funções de interação com o usuário dentro, todas essas funções são chamadas no ITEM 5. bindEvents
+    // 9. Objeto para armazenar as funções de interação com o usuário dentro, todas essas funções são chamadas no ITEM 5. 'bindEvents'
     Events: {
 
         // 10. Função de click para marcar a tarefa que usuário deu input.
@@ -156,23 +145,23 @@ const main = {
             const li = e.target.parentElement;
 
             // 10.2 variável usada para selecionar o contéudo da tarefa (usado no ITEM 10.5)
-            const task = li.querySelector(".task").textContent;
+            const taskContent = li.querySelector(".task").textContent;
 
-            // 10.3. variável só para verificar se a li no html possui a classe .done
-            const done = li.classList.contains("done");
+            // 10.3. variável só para verificar se a li no html possui a classe .checked
+            const checked = li.classList.contains("checked");
 
             // 10.4. variável para transformar os elementos salvos no local storage em objetos ou em uma array vazia (mais uma vez para previnir erros)
-            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
 
-            // 10.5 verificação para checar se existe a classe done (ITEM 10.3)
-            if (!done) {
+            // 10.5 verificação para checar se existe a classe checked (ITEM 10.3)
+            if (!checked) {
 
                 // caso a verificação seja falsa, ou seja nao contenha a classe, adicionar a classe
-                li.classList.add("done");
+                li.classList.add("checked");
 
                 // método MAP de percorrer arrays para modificar o done de FALSE para TRUE e rertonar uma nova array
                 tasks = tasks.map(item => {
-                    if (item.task === task) {
+                    if (item.task === taskContent) {
                         item.done = true;
                     }
                     return item;
@@ -184,9 +173,9 @@ const main = {
             }
 
             // 10.7 o mesmo que o ITEM 10.5 só que agora para modificar o done de TRUE para FALSE e remover a classe
-            li.classList.remove("done");
+            li.classList.remove("checked");
             tasks = tasks.map(item => {
-                if (item.task === task) {
+                if (item.task === taskContent) {
                     item.done = false;
                 }
                 return item;
@@ -226,25 +215,25 @@ const main = {
                 this.cacheSelectors()
                 this.bindEvents()
 
-                // !IMPORTANTE 11.7 a partir de agora começa o coração do local storage, primeiro definindo o objeto com dois parâmetros, um recebendo o nome da tarefa e o segundo recebendo um valor falso, que caso seja alterado, mantenha a classe de css para deixar o item da tarefa marcado.
+                // !IMPORTANTE 11.7 A partir de agora começa o coração do local storage, primeiro definindo o objeto com dois parâmetros, um recebendo o nome da tarefa e o segundo recebendo um valor falso, que caso seja alterado, mantenha a classe de css para deixar o item da tarefa marcado quando a página for reinciada.
                 const task = {
                     task: value,
                     done: false
                 };
-                
+
                 // !IMPORTANTE 11.8 após definido o objeto, uma variável para pegar os items do local storage
                 let savedTasks = localStorage.getItem('tasks')
 
                 /* 
-                !IMPORTANTE 11.9 verificação TERNARIO para substituir IF e enxugar o código, se tiver alguma tarefa salva ele transforma o localstorage em objeto, caso contrário ele cria uma array vazia (evita problema com o codigo).
-                Acontece que quando esse código rodar pela primeira vez ele já vai criar uma array porque não há nada salvo em savedTasks por isso o ITEM 11.10 funciona
+                !IMPORTANTE 11.9 Verificação TERNARIO para substituir IF e enxugar o código, se tiver alguma tarefa salva ele transforma o localstorage em objeto, caso contrário ele cria uma array vazia (evita problema com o codigo).
+                Acontece que quando esse código rodar pela primeira vez ele já vai criar uma array porque não há nada salvo em savedTasks por isso o 'savedTasks' funciona
                 */
                 let savedTasksOBJ = savedTasks ? JSON.parse(savedTasks) : []
 
                 // !IMPORTANTE 11.10 metodo push para inserir novas tarefas dentro da array criada no ITEM 11.9 
                 savedTasksOBJ.push(task)
 
-                // !IMPORTANTE 11.12 após a criação de novas tarefas, enviar para o localStorage
+                // !IMPORTANTE 11.12 Após a criação de novas tarefas e juntar elas em uma array de objetos, enviar para o localStorage
                 localStorage.setItem('tasks', JSON.stringify(savedTasksOBJ))
             }
         },

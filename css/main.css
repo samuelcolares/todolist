@@ -136,13 +136,13 @@ body {
     background-color: var(--check-background-color-effect);
 }
 
-.wrapper-list ul.list li.done .check {
+.wrapper-list ul.list li.checked .check {
     background-image: url(../img/check1.png);
     background-size: 25px;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0;
-    animation: check 2s ease forwards;
+    animation: check 1s ease forwards;
 }
 @keyframes check {
     0% {
@@ -159,7 +159,7 @@ body {
 .wrapper-list ul.list li .task {
     color: var(--input-text-color);
 }
-.wrapper-list ul.list li.done .task {
+.wrapper-list ul.list li.checked .task {
     text-decoration: line-through;
 }
 
@@ -279,6 +279,11 @@ body {
         background-color: var(--task-hover-color);
     }
 
+    .toDoList header {
+        text-align: center;
+        background: rgb(131, 87, 42);
+    }
+
     .wrapper-list ul.list li:hover {
         transform: scale(1);
         border-radius: 0px;
@@ -288,11 +293,11 @@ body {
         filter: blur(0.8px);
         opacity: 0.8;
     }
-
-    .toDoList header {
-        text-align: center;
-        background: rgb(131, 87, 42);
+  
+    .wrapper-list ul.list button.remove {
+        opacity: 0.3;
     }
+
     .toast {
         width: 90vw;
         font-size: 20px;
@@ -306,13 +311,26 @@ body {
         font-size: 11px;
         display: block;
         width: 100%;
+        padding: 3px 0;
         text-align: center;
         position: absolute;
-        bottom: 1%;
+        bottom: 0%;
         right: 50%;
         transform: translateX(50%);
         z-index: -10;
+        background-color: rgba(0, 0, 0, 0.4);
     }
+
+    .footer a{
+        animation: colorLink 1s ease 5s forwards;
+    }
+
+    @keyframes colorLink {
+        100%{
+            color: firebrick;
+        }
+    }
+    
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1366px) {
@@ -327,5 +345,9 @@ body {
     .footer {
         grid-row-start: 2;
         grid-column: span 1;
+    }
+
+    .wrapper-list ul.list button.remove {
+        opacity: 0.3;
     }
 }
