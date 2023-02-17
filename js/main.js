@@ -72,18 +72,18 @@ const main = {
     // 5. Função para invocar outras funções que apenas acontecem com interação do usuário
     bindEvents: function () {
         // 5.1 Aplicando uma variável para armazenar o this que se refere ao objeto main para posteriormente aplicar nas funções o uso do THIS que se refira ao objeto main
-        const self = this
+        // const self = this
 
         //5.2 Sempre que um elemento do HTML seja mais de uma unidade o uso do forEach é necessário
-        this.$checkButtons.forEach((checkmark) => {
-            checkmark.onclick = self.Events.checkButton_click.bind(self)
+        this.$checkButtons.forEach(checkmark => {
+            checkmark.onclick = this.Events.checkButton_click
         })
 
         // 5.3 Nesse caso não é necessário o uso de forEeach por existir apenas um input de envio de dados
-        this.$inputTask.onkeypress = self.Events.inputTask_keypress.bind(self)
+        this.$inputTask.onkeypress = this.Events.inputTask_keypress.bind(this)
 
         this.$removeButtons.forEach((remove) => {
-            remove.onclick = self.Events.removeButton_click.bind(self)
+            remove.onclick = this.Events.removeButton_click
         })
     },
 
